@@ -17,6 +17,15 @@ const MainNav: React.FC<MainNavProps> = ({ data }) => {
     label: route.name,
     active: pathName === `/category/${route.id}`,
   }));
+
+  if (data.length === 0) {
+    return (
+      <nav className="mx-3 md:mx-6 flex overflow-auto scrollbar-hide whitespace-nowrap items-center">
+        <span className="text-sm text-neutral-500">No categories available</span>
+      </nav>
+    );
+  }
+
   return (
     <nav className="mx-3 md:mx-6 flex overflow-auto scrollbar-hide whitespace-nowrap items-center space-x-4 lg:space-x-6">
       {routes.map((route) => (

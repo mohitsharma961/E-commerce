@@ -1,11 +1,13 @@
 import { Color } from "@/types";
-
-const URL = `${process.env.NEXT_PUBLIC_API_URL}/colors`
+import { fetchJson } from "@/lib/fetcher";
 
 const getColors = async (): Promise<Color[]> => {
-    const res = await fetch(URL);
-
-    return res.json();
+  try {
+    return await fetchJson('/colors');
+  } catch (err) {
+    console.error('getColors error:', err);
+    return [];
+  }
 }
 
 export default getColors

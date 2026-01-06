@@ -1,8 +1,8 @@
 "use client";
 
 import axios from "axios";
-import { useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 
 import Button from "@/components/ui/button";
 import Currency from "@/components/ui/currency";
@@ -11,6 +11,7 @@ import { toast } from "react-hot-toast";
 
 const Summary = () => {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const items = useCart((state) => state.items);
   const removeAll = useCart((state) => state.removeAll);
 
@@ -29,15 +30,35 @@ const Summary = () => {
     return total + Number(item.price);
   }, 0);
 
-  const onCheckout = async () => {
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/checkout`,
-      {
-        productIds: items.map((item) => item.id),
-      }
-    );
+  const [isLoading, setIsLoading] = useState(false);
 
-    window.location = response.data.url;
+  const onCheckout = async () => {
+    try {
+      setIsLoading(true);
+
+      const url = '/api/checkout';
+      console.log('Checkout POST url:', url);
+
+      const response = await axios.post(url, {
+        productIds: items.map((item) => item.id),
+      });
+
+      console.log('Checkout response status:', response.status, 'data:', response.data);
+
+      if (response.data?.url) {
+        window.location.href = response.data.url;
+      } else if (response.data?.error) {
+        toast.error(response.data.error);
+      } else {
+        toast.error("Checkout failed.");
+      }
+    } catch (err: any) {
+      console.error("Checkout error:", err);
+      const msg = err?.response?.data?.error || err?.message || "Checkout request failed.";
+      toast.error(msg);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -51,10 +72,17 @@ const Summary = () => {
       </div>
       <Button
         onClick={onCheckout}
-        disabled={items.length === 0}
+        disabled={items.length === 0 || isLoading}
         className="w-full mt-6"
       >
-        Checkout
+        {isLoading ? "Processing..." : "Checkout"}
+      </Button>
+
+      <Button
+        onClick={() => router.push('/orders')}
+        className="w-full mt-2 bg-white text-black"
+      >
+        View orders
       </Button>
     </div>
   );

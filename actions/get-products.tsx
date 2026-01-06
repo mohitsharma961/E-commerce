@@ -1,7 +1,6 @@
 import { Product } from "@/types";
 import qs from 'query-string'
-
-const URL = `${process.env.NEXT_PUBLIC_API_URL}/products`;
+import { fetchJson } from "@/lib/fetcher";
 
 interface Query {
   categoryId?: string;
@@ -12,20 +11,22 @@ interface Query {
 }
 
 const getProducts = async (query: Query): Promise<Product[]> => {
-  const url = qs.stringifyUrl({
-    url: URL,
-    query: {
+  try {
+    const queryString = qs.stringify({
       description: query.description,
       colorId: query.colorId,
       sizeId: query.sizeId,
       categoryId: query.categoryId,
       isFeatured: query.isFeatured
-    }
-  });
-  
-  const res = await fetch(url);
+    }, { skipEmptyString: true, skipNull: true });
 
-  return res.json();
+    const path = `/products${queryString ? `?${queryString}` : ''}`;
+
+    return await fetchJson(path);
+  } catch (err) {
+    console.error('getProducts error:', err);
+    return [];
+  }
 };
 
 export default getProducts;

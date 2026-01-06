@@ -4,6 +4,8 @@ import Container from "@/components/ui/container";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import localFont from "next/font/local";
+import Link from "next/link";
+import HomeCategories from "@/components/home-categories";
 import Button from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { ArrowRightCircle } from "lucide-react";
@@ -21,6 +23,9 @@ const HomePage = async () => {
   return (
     <Container>
       <div className="space-y-10 pb-10">
+        {/* Categories showcase above hero */}
+        <HomeCategories />
+
         <div className="flex flex-col sm:flex-row graph justify-between">
           <div className="flex flex-col sm:flex-row subtle gap-10">
             <div className="px-3 sm:px-5 pt-5 flex gap-8 flex-col sm:pt-0">
@@ -40,9 +45,11 @@ const HomePage = async () => {
                 </p>
               </div>
               <div>
-                <Button className="bg-black mb-4 text-white flex items-center gap-2">
-                  Shop Now <ArrowRight className="w-4 h-4" />
-                </Button>
+                <Link href="#featured">
+                  <Button className="bg-black mb-4 text-white flex items-center gap-2">
+                    Shop Now <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </Link>
               </div>
               <div className="w-full">
                 <label
@@ -73,7 +80,7 @@ const HomePage = async () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-y-8 px-4 sm:px-6 lg:px-8">
+        <div id="featured" className="flex flex-col gap-y-8 px-4 sm:px-6 lg:px-8">
           <ProductList title="Featured Products" items={products} />
         </div>
       </div>

@@ -4,6 +4,7 @@ import Gallery from "@/components/gallery";
 import Info from "@/components/info";
 import ProductList from "@/components/product-list";
 import Container from "@/components/ui/container";
+import NoResults from "@/components/ui/no-results";
 
 interface ProductPageProps {
   params: {
@@ -16,20 +17,20 @@ export const revalidate = 0;
 const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
   const product = await getProduct(params.productId);
 
-  const Products = await getProducts({
+  if (!product) {
+    return <NoResults />;
+  }
+
+  const products = await getProducts({
     categoryId: product.category.id,
   });
 
   // remove product selected from suggested products, randomize the suggested products and then reduce to 8
-  const suggestedProducts = await Products.filter(
-    (item) => item.id !== params.productId
-  )
+  const suggestedProducts = products
+    .filter((item) => item.id !== params.productId)
     .sort(() => Math.random() - 0.5)
     .slice(0, 8);
 
-  if (!product) {
-    return null;
-  }
   return (
     <div className="bg-white">
       <Container>

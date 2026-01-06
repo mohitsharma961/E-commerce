@@ -1,11 +1,13 @@
 import { Product } from "@/types";
+import { fetchJson } from "@/lib/fetcher";
 
-const URL = `${process.env.NEXT_PUBLIC_API_URL}/products`;
-
-const getProduct = async ( id: string ): Promise<Product> => {
-  const res = await fetch(`${URL}/${id}`);
-
-  return res.json();
+const getProduct = async ( id: string ): Promise<Product | null> => {
+  try {
+    return await fetchJson(`/products/${id}`);
+  } catch (err) {
+    console.error('getProduct error:', err);
+    return null;
+  }
 };
 
 export default getProduct;
