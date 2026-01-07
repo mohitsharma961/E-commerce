@@ -1,11 +1,32 @@
+"use client";
+
 import Container from "@/components/ui/container";
 import Link from "next/link";
 import MainNav from "@/components/main-nav";
-import getCategories from "@/actions/get-categories";
 import NavbarActions from "@/components/navbar-actions";
+import { useEffect, useState } from "react";
 
-const Navbar = async () => {
-  const categories = await getCategories();
+const Navbar = () => {
+  const [categories, setCategories] = useState<any[]>([]);
+
+  useEffect(() => {
+    let mounted = true;
+    const fetchCats = async () => {
+      try {
+        const res = await fetch(`/api/categories`);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (mounted) setCategories(data);
+      } catch (err) {
+        console.error("Failed to load categories", err);
+      }
+    };
+    fetchCats();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   return (
     <div className="border-b">
       <Container>

@@ -36,3 +36,12 @@ export interface Product {
   color: Color;
   images: Image[];
 }
+
+export interface Review {
+  id: string;
+  productId: string;
+  rating: number; // 1-5
+  comment?: string;
+  name?: string;
+  createdAt: string;
+}

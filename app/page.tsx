@@ -1,5 +1,5 @@
 import getProducts from "@/actions/get-products";
-import ProductList from "@/components/product-list";
+import SearchProducts from "@/components/search-products";
 import Container from "@/components/ui/container";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -80,8 +80,8 @@ const HomePage = async () => {
             </div>
           </div>
         </div>
-        <div id="featured" className="flex flex-col gap-y-8 px-4 sm:px-6 lg:px-8">
-          <ProductList title="Featured Products" items={products} />
+        <div className="flex flex-col gap-y-8 px-4 sm:px-6 lg:px-8">
+          <SearchProducts initialItems={products} />
         </div>
       </div>
     </Container>

@@ -2,6 +2,7 @@ import Footer from "@/components/footer";
 import "./globals.css";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import NavbarWrapper from "@/components/navbar-wrapper";
 import Navbar from "@/components/navbar";
 import ModalProvider from "@/providers/modal-provider";
 import ToastProvider from "@/providers/toast-provider";
@@ -96,7 +97,7 @@ export default function RootLayout({
       <body className={BRFrima.className}>
         <ModalProvider />
         <ToastProvider />
-        <Navbar />
+        <NavbarWrapper />
         {children}
         <Footer />
       </body>
